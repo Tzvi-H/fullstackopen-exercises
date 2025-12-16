@@ -1,4 +1,4 @@
-const Header = ({ course }) => <h1>{course}</h1>;
+const Header = ({ course }) => <h2>{course}</h2>;
 
 const Part = ({ part, exercises }) => (
   <p>
@@ -23,7 +23,11 @@ const Total = ({ parts }) => {
     return sum + part.exercises;
   }, 0);
 
-  return <p>Number of exercises {total}</p>;
+  return (
+    <p>
+      <b>total of {total} exercises</b>
+    </p>
+  );
 };
 
 const Course = ({ course }) => {
