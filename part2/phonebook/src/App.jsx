@@ -48,6 +48,12 @@ const App = () => {
     });
   };
 
+  const handleDelete = (id) => {
+    personService.remove(id).then(() => {
+      setPersons(persons.filter((person) => person.id !== id));
+    });
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -66,7 +72,10 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons personsToDisplay={personsToDisplay} />
+      <Persons
+        personsToDisplay={personsToDisplay}
+        handleDelete={handleDelete}
+      />
     </div>
   );
 };
