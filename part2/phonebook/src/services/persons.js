@@ -16,4 +16,10 @@ const remove = (id) => {
   return axios.delete(`http://localhost:3001/persons/${id}`);
 };
 
-export default { getAll, create, remove };
+const update = (updatedPerson) => {
+  return axios
+    .put(`http://localhost:3001/persons/${updatedPerson.id}`, updatedPerson)
+    .then((response) => response.data);
+};
+
+export default { getAll, create, remove, update };
