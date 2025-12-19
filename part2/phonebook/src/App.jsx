@@ -55,8 +55,11 @@ const App = () => {
           );
           setNewName("");
           setNewNumber("");
-          setNotificationMessage(`updated ${returnedPerson.name}`);
-          setTimeout(() => setNotificationMessage(null), 1000);
+          setNotificationMessage({
+            message: `updated ${returnedPerson.name}`,
+            className: "success",
+          });
+          setTimeout(() => setNotificationMessage(null), 1500);
         });
         return;
       }
@@ -71,8 +74,11 @@ const App = () => {
       setPersons([...persons, returnedPerson]);
       setNewName("");
       setNewNumber("");
-      setNotificationMessage(`Added ${returnedPerson.name}`);
-      setTimeout(() => setNotificationMessage(null), 1000);
+      setNotificationMessage({
+        message: `Added ${returnedPerson.name}`,
+        className: "success",
+      });
+      setTimeout(() => setNotificationMessage(null), 1500);
     });
   };
 
@@ -81,18 +87,30 @@ const App = () => {
     if (!window.confirm(`Delete ${personToDelete.name} ?`)) {
       return;
     }
-    personService.remove(id).then(() => {
-      setPersons(persons.filter((person) => person.id !== id));
-      setNotificationMessage(`Removed ${personToDelete.name}`);
-      setTimeout(() => setNotificationMessage(null), 1000);
-    });
+    personService
+      .remove(id)
+      .then(() => {
+        setPersons(persons.filter((person) => person.id !== id));
+        setNotificationMessage({
+          message: `Removed ${personToDelete.name}`,
+          className: "success",
+        });
+        setTimeout(() => setNotificationMessage(null), 1500);
+      })
+      .catch((e) => {
+        setNotificationMessage({
+          message: `Information of ${personToDelete.name} has already been removed from the server`,
+          className: "error",
+        });
+        setTimeout(() => setNotificationMessage(null), 1500);
+      });
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
 
-      <Notification message={notificationMessage} />
+      <Notification notification={notificationMessage} />
 
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
 
