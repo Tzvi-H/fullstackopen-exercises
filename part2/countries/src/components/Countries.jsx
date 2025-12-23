@@ -1,6 +1,11 @@
 import axios from "axios";
 
-const Countries = ({ matchedCountryNames, countryInfo, setCountryInput }) => {
+const Countries = ({
+  matchedCountryNames,
+  countryInfo,
+  setCountryInput,
+  weatherInfo,
+}) => {
   if (matchedCountryNames.length > 10) {
     return <p>Too many matches, specify another filter</p>;
   } else if (matchedCountryNames.length > 1) {
@@ -15,7 +20,7 @@ const Countries = ({ matchedCountryNames, countryInfo, setCountryInput }) => {
         ))}
       </p>
     );
-  } else if (countryInfo) {
+  } else if (countryInfo && weatherInfo) {
     return (
       <div>
         <h1>{countryInfo.name.common}</h1>
@@ -28,6 +33,14 @@ const Countries = ({ matchedCountryNames, countryInfo, setCountryInput }) => {
           ))}
         </ul>
         <img src={countryInfo.flags.png} />
+        <div>
+          <h1>Weather in {countryInfo.name.common}</h1>
+          <p>Temperature {weatherInfo.main.temp} Celsius</p>
+          <img
+            src={`https://openweathermap.org/img/wn/${weatherInfo.weather[0].icon}@2x.png`}
+          />
+          <p>Wind {weatherInfo.wind.speed} m/s</p>
+        </div>
       </div>
     );
   }
