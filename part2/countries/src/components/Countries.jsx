@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const Countries = ({ matchedCountryNames, countryInfo }) => {
+const Countries = ({ matchedCountryNames, countryInfo, setCountryInput }) => {
   if (matchedCountryNames.length > 10) {
     return <p>Too many matches, specify another filter</p>;
   } else if (matchedCountryNames.length > 1) {
@@ -9,6 +9,7 @@ const Countries = ({ matchedCountryNames, countryInfo }) => {
         {matchedCountryNames.map((country) => (
           <span key={country}>
             {country}
+            <button onClick={() => setCountryInput(country)}>Show</button>
             <br />
           </span>
         ))}

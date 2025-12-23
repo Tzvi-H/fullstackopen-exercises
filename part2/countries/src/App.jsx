@@ -6,6 +6,7 @@ const App = () => {
   const [countryInput, setCountryInput] = useState("");
   const [countryNames, setCountryNames] = useState([]);
   const [countryInfo, setCountryInfo] = useState(null);
+
   useEffect(() => {
     axios
       .get("https://studies.cs.helsinki.fi/restcountries/api/all")
@@ -18,14 +19,15 @@ const App = () => {
       countryInput.length > 0 &&
       country.toLowerCase().startsWith(countryInput.toLowerCase())
   );
+
   const matchedCountry =
     matchedCountryNames.length === 1 ? matchedCountryNames[0] : null;
+
   useEffect(() => {
     if (!matchedCountry) {
       setCountryInfo(null);
       return;
     }
-
     axios
       .get(
         `https://studies.cs.helsinki.fi/restcountries/api/name/${matchedCountry}`
@@ -34,9 +36,11 @@ const App = () => {
         setCountryInfo(response.data);
       });
   }, [matchedCountry]);
+
   const handleCountryInput = (e) => {
     setCountryInput(e.target.value);
   };
+
   if (countryNames.length === 0) {
     return <p>loading...</p>;
   }
@@ -48,6 +52,7 @@ const App = () => {
       <Countries
         countryInfo={countryInfo}
         matchedCountryNames={matchedCountryNames}
+        setCountryInput={setCountryInput}
       />
     </div>
   );
