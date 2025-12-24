@@ -26,8 +26,9 @@ const App = () => {
     matchedCountryNames.length === 1 ? matchedCountryNames[0] : null;
 
   useEffect(() => {
+    setCountryInfo(null);
+    setWeatherInfo(null);
     if (!matchedCountry) {
-      setCountryInfo(null);
       return;
     }
     axios
@@ -48,8 +49,6 @@ const App = () => {
 
   const handleCountryInput = (e) => {
     setCountryInput(e.target.value);
-    setCountryInfo(null);
-    setWeatherInfo(null);
   };
 
   if (countryNames.length === 0) {
