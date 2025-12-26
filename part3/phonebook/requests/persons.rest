@@ -5,10 +5,10 @@ GET http://localhost:3001/info
 GET http://localhost:3001/api/persons
 
 ### get a person
-GET http://localhost:3001/api/persons/968567388
+GET http://localhost:3001/api/persons/4
 
 ### delete person
-DELETE http://localhost:3001/api/persons/968567388
+DELETE http://localhost:3001/api/persons/3
 
 ### create a person
 POST http://localhost:3001/api/persons
