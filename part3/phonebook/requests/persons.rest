@@ -8,4 +8,14 @@ GET http://localhost:3001/api/persons
 GET http://localhost:3001/api/persons/1
 
 ### delete person
-DELETE http://localhost:3001/api/persons/1
+DELETE http://localhost:3001/api/persons/278877658
+
+### create a person
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "John Wick",
+    "number": "12-382-19229292"
+}
+

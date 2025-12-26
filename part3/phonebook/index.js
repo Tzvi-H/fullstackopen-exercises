@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 let persons = [
   {
     id: "1",
@@ -23,6 +25,10 @@ let persons = [
     number: "39-23-6423122",
   },
 ];
+
+const generateId = () => {
+  return 1 + Math.floor(Math.random() * 1_000_000_000);
+};
 
 app.get("/info", (req, res) => {
   const count = persons.length;
@@ -49,6 +55,20 @@ app.get("/api/persons/:id", (req, res) => {
       error: "no person found",
     });
   }
+});
+
+app.post("/api/persons", (req, res) => {
+  const body = req.body;
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: String(generateId()),
+  };
+
+  persons = persons.concat(person);
+
+  res.json(person);
 });
 
 app.delete("/api/persons/:id", (req, res) => {
