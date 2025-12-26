@@ -5,12 +5,21 @@ GET http://localhost:3001/info
 GET http://localhost:3001/api/persons
 
 ### get a person
-GET http://localhost:3001/api/persons/1
+GET http://localhost:3001/api/persons/968567388
 
 ### delete person
-DELETE http://localhost:3001/api/persons/278877658
+DELETE http://localhost:3001/api/persons/968567388
 
 ### create a person
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "John Wick",
+    "number": "12-382-19229292"
+}
+
+### create a invalid person
 POST http://localhost:3001/api/persons
 Content-Type: application/json
 
