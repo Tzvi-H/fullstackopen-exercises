@@ -24,6 +24,16 @@ let persons = [
   },
 ];
 
+app.get("/info", (req, res) => {
+  const count = persons.length;
+  const time = new Date();
+
+  res.send(`
+    <p>Phonebook has info for ${count} people</p>
+    <p>${time}</p>
+`);
+});
+
 app.get("/api/persons", (req, res) => {
   res.json(persons);
 });
@@ -41,14 +51,11 @@ app.get("/api/persons/:id", (req, res) => {
   }
 });
 
-app.get("/info", (req, res) => {
-  const count = persons.length;
-  const time = new Date();
+app.delete("/api/persons/:id", (req, res) => {
+  const id = req.params.id;
+  persons = persons.filter((person) => person.id !== id);
 
-  res.send(`
-    <p>Phonebook has info for ${count} people</p>
-    <p>${time}</p>
-`);
+  res.status(204).end();
 });
 
 const PORT = 3001;
