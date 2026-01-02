@@ -32,14 +32,6 @@ app.get("/api/persons/:id", (req, res) => {
 app.post("/api/persons", (req, res) => {
   const body = req.body;
 
-  // if (!body.name) {
-  //   return res.status(400).json({ error: "missing name" });
-  // } else if (!body.number) {
-  //   return res.status(400).json({ error: "missing number" });
-  // } else if (persons.some((person) => person.name === body.name)) {
-  //   return res.status(400).json({ error: "name must be unique" });
-  // }
-
   const person = new Person({
     name: body.name,
     number: body.number,
@@ -51,10 +43,9 @@ app.post("/api/persons", (req, res) => {
 });
 
 app.delete("/api/persons/:id", (req, res) => {
-  const id = req.params.id;
-  persons = persons.filter((person) => person.id !== id);
-
-  res.status(204).end();
+  Person.findByIdAndDelete(req.params.id).then((result) => {
+    res.status(204).end();
+  });
 });
 
 const PORT = process.env.PORT;
