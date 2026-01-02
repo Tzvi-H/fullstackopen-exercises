@@ -50,6 +50,18 @@ app.delete("/api/persons/:id", (req, res, next) => {
     .catch((error) => next(error));
 });
 
+app.put("/api/persons/:id", (req, res, next) => {
+  const { number } = req.body;
+  Person.findById(req.params.id)
+    .then((person) => {
+      person.number = number;
+      return person.save().then((updatedPerson) => {
+        res.json(updatedPerson);
+      });
+    })
+    .catch((error) => next(error));
+});
+
 const errorHandler = (error, req, res, next) => {
   console.error(error.message);
 
