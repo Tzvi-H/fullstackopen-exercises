@@ -10,23 +10,33 @@ app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
 
+app.get("/info", (req, res) => {
+  Person.countDocuments().then((count) => {
+    const time = new Date();
+
+    res.send(`
+        <p>Phonebook has info for ${count} people</p>
+        <p>${time}</p>
+      `);
+  });
+});
+
 app.get("/api/persons", (req, res) => {
   Person.find({}).then((people) => {
     res.json(people);
   });
 });
 
-app.get("/api/persons/:id", (req, res) => {
-  const id = req.params.id;
-  const person = persons.find((person) => person.id === id);
-
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).json({
-      error: "no person found",
-    });
-  }
+app.get("/api/persons/:id", (req, res, next) => {
+  Person.findById(req.params.id)
+    .then((person) => {
+      if (person) {
+        res.json(person);
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
 
 app.post("/api/persons", (req, res) => {
