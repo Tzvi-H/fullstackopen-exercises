@@ -70,16 +70,26 @@ const App = () => {
       number: newNumber,
     };
 
-    personService.create(newPerson).then((returnedPerson) => {
-      setPersons([...persons, returnedPerson]);
-      setNewName("");
-      setNewNumber("");
-      setNotificationMessage({
-        message: `Added ${returnedPerson.name}`,
-        className: "success",
+    personService
+      .create(newPerson)
+      .then((returnedPerson) => {
+        setPersons([...persons, returnedPerson]);
+        setNewName("");
+        setNewNumber("");
+        setNotificationMessage({
+          message: `Added ${returnedPerson.name}`,
+          className: "success",
+        });
+        setTimeout(() => setNotificationMessage(null), 1500);
+      })
+      .catch((error) => {
+        console.log(error.response.data.error);
+        setNotificationMessage({
+          message: error.response.data.error,
+          className: "error",
+        });
+        setTimeout(() => setNotificationMessage(null), 4000);
       });
-      setTimeout(() => setNotificationMessage(null), 1500);
-    });
   };
 
   const handleDelete = (id) => {
