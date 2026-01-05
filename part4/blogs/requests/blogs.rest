@@ -1,0 +1,14 @@
+### get all blogs
+GET http://localhost:3003/api/blogs
+
+### create a blog
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "vs rest",
+    "author": "author",
+    "url": "url",
+    "likes": 1,
+    "wrong": false
+}
