@@ -7,8 +7,7 @@ Content-Type: application/json
 
 {
     "title": "vs rest",
-    "author": "author",
+    "author": "author 2",
     "url": "url",
-    "likes": 1,
-    "wrong": false
+    "likes": 1
 }
