@@ -5,6 +5,7 @@ const app = require("../app");
 const mongoose = require("mongoose");
 const Blog = require("../models/blog");
 const helper = require("./test_helper");
+const { title } = require("node:process");
 
 const api = supertest(app);
 
@@ -13,7 +14,7 @@ beforeEach(async () => {
   await Blog.insertMany(helper.initialBlogs);
 });
 
-describe("calling /api/blogs", () => {
+describe("GET /api/blogs", () => {
   test("blogs are returned as json", async () => {
     await api
       .get("/api/blogs")
@@ -42,6 +43,29 @@ describe("calling /api/blogs", () => {
     const response = await api.get("/api/blogs");
     const blog1 = response.body[0];
     assert.ok(blog1.id);
+  });
+});
+
+describe("POST /api/blogs", () => {
+  test("a valid blog can be added", async () => {
+    const newBlog = {
+      title: "test title",
+      author: "test author",
+      url: "test url",
+      likes: 3,
+    };
+
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1);
+
+    const titles = blogsAtEnd.map((b) => b.title);
+    assert(titles.includes("test title"));
   });
 });
 
