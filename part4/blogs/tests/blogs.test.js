@@ -31,6 +31,18 @@ describe("calling /api/blogs", () => {
     const titles = response.body.map((note) => note.title);
     assert(titles.includes("title 1"));
   });
+
+  test("a blog does not have the default '_id' property", async () => {
+    const response = await api.get("/api/blogs");
+    const blog1 = response.body[0];
+    assert.strictEqual(blog1._id, undefined);
+  });
+
+  test("a blog has an 'id' property", async () => {
+    const response = await api.get("/api/blogs");
+    const blog1 = response.body[0];
+    assert.ok(blog1.id);
+  });
 });
 
 after(async () => {
