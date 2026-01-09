@@ -113,6 +113,18 @@ describe("DELETE /api/blogs/:id", () => {
   });
 });
 
+describe("PUT /api/blogs:id", () => {
+  test("updates the likes with a valid id ", async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const firstBlog = blogsAtStart[0];
+    const updatedBlog = { ...firstBlog, likes: firstBlog.likes + 1 };
+
+    await api.put(`${URL}/${firstBlog.id}`).send(updatedBlog).expect(200);
+    const blogAtEnd = await api.get(`${URL}/${firstBlog.id}`);
+    assert.strictEqual(blogAtEnd.body.likes, firstBlog.likes + 1);
+  });
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
