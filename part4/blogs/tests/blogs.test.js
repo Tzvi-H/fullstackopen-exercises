@@ -99,6 +99,20 @@ describe("POST /api/blogs", () => {
   });
 });
 
+describe("DELETE /api/blogs/:id", () => {
+  test("succeeds with valid id", async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const firstBlog = blogsAtStart[0];
+
+    await api.delete(`${URL}/${firstBlog.id}`).expect(204);
+    const blogsAtEnd = await helper.blogsInDb();
+
+    const titles = blogsAtEnd.map((b) => b.title);
+    assert(!titles.includes(firstBlog.title));
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1);
+  });
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
