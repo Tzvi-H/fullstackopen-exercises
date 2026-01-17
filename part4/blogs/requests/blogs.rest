@@ -7,7 +7,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjE2Z3VpdGFyIiwiaWQiOiI2OTZiNDhjNGFhMzI4MmY1ZTg1NGM4YWYiLCJpYXQiOjE3Njg2Mzg2NzJ9.I72oIe1it8baUx4jSFJu7i-CiSiTjPWOyHdjUvz_n3w
 
 {
-    "title": "guitar 2",
+    "title": "guitar 3",
     "author": "16guitar",
     "url": "guitars.com",
     "likes": 1
