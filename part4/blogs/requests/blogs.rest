@@ -13,7 +13,7 @@ Content-Type: application/json
 }
 
 ### get all users
-GET http://localhost:3003/api/blogs
+GET http://localhost:3003/api/users
 
 ### create a user
 POST http://localhost:3003/api/users
@@ -23,4 +23,13 @@ Content-Type: application/json
     "username": "abc",
     "password": "1234",
     "name": "username"
+}
+
+### login
+POST http://localhost:3003/api/login
+Content-Type:  application/json
+
+{
+    "username": "username",
+    "password": "username"
 }
