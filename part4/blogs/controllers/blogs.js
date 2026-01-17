@@ -32,7 +32,21 @@ blogsRouter.post("/", async (request, response) => {
 });
 
 blogsRouter.delete("/:id", async (request, response) => {
-  await Blog.findByIdAndDelete(request.params.id);
+  if (!request.token) {
+    return response.status(401).json({ error: "token missing" });
+  }
+  const decodedToken = jwt.verify(request.token, process.env.SECRET);
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: "token invalid" });
+  }
+
+  const blog = await Blog.findById(request.params.id);
+
+  if (blog.user.toString() !== decodedToken.id) {
+    return response.status(401).json({ error: "only creator can delete blog" });
+  }
+
+  await blog.deleteOne();
   response.status(204).end();
 });
 
