@@ -4,15 +4,30 @@ const supertest = require("supertest");
 const app = require("../app");
 const mongoose = require("mongoose");
 const Blog = require("../models/blog");
+const User = require("../models/user");
 const helper = require("./test_helper");
 const { title } = require("node:process");
+const blog = require("../models/blog");
 const URL = "/api/blogs";
+const USERS_URL = "/api/users";
+const LOGIN_URL = "/api/login";
 
 const api = supertest(app);
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-  await Blog.insertMany(helper.initialBlogs);
+  await User.deleteMany({});
+  const response = await api.post(USERS_URL).send({
+    username: "test_user",
+    password: "test_password",
+    name: "test_name",
+  });
+  const user = response.body;
+  const blogsWithUser = helper.initialBlogs.map((blog) => ({
+    ...blog,
+    user: user.id,
+  }));
+  await Blog.insertMany(blogsWithUser);
 });
 
 describe("GET /api/blogs", () => {
@@ -48,6 +63,15 @@ describe("GET /api/blogs", () => {
 });
 
 describe("POST /api/blogs", () => {
+  let authorization;
+  beforeEach(async () => {
+    const response = await api.post(LOGIN_URL).send({
+      username: "test_user",
+      password: "test_password",
+    });
+    authorization = `Bearer ${response.body.token}`;
+  });
+
   test("a valid blog can be added", async () => {
     const newBlog = {
       title: "test title",
@@ -59,6 +83,7 @@ describe("POST /api/blogs", () => {
     await api
       .post(URL)
       .send(newBlog)
+      .set({ Authorization: authorization })
       .expect(201)
       .expect("Content-Type", /application\/json/);
 
@@ -76,8 +101,21 @@ describe("POST /api/blogs", () => {
       url: "test url",
     };
 
-    const { body } = await api.post(URL).send(newBlog);
+    const { body } = await api
+      .post(URL)
+      .send(newBlog)
+      .set({ Authorization: authorization });
     assert.strictEqual(body.likes, 0);
+  });
+
+  test("creating a blog without sending a token witll result in a 401 response coce", async () => {
+    const newBlog = {
+      title: "test title",
+      author: "test author",
+      url: "test url",
+    };
+
+    await api.post(URL).send(newBlog).expect(401);
   });
 
   test("creating a blog without a title property will result in a 400 response code", async () => {
@@ -86,7 +124,11 @@ describe("POST /api/blogs", () => {
       url: "test url",
     };
 
-    await api.post(URL).send(newBlog).expect(400);
+    await api
+      .post(URL)
+      .send(newBlog)
+      .set({ Authorization: authorization })
+      .expect(400);
   });
 
   test("creating a blog without a url property will result in a 400 response code", async () => {
@@ -95,16 +137,32 @@ describe("POST /api/blogs", () => {
       author: "test author",
     };
 
-    await api.post(URL).send(newBlog).expect(400);
+    await api
+      .post(URL)
+      .send(newBlog)
+      .set({ Authorization: authorization })
+      .expect(400);
   });
 });
 
 describe("DELETE /api/blogs/:id", () => {
+  let authorization;
+  beforeEach(async () => {
+    const response = await api.post(LOGIN_URL).send({
+      username: "test_user",
+      password: "test_password",
+    });
+    authorization = `Bearer ${response.body.token}`;
+  });
+
   test("succeeds with valid id", async () => {
     const blogsAtStart = await helper.blogsInDb();
     const firstBlog = blogsAtStart[0];
 
-    await api.delete(`${URL}/${firstBlog.id}`).expect(204);
+    await api
+      .delete(`${URL}/${firstBlog.id}`)
+      .set({ Authorization: authorization })
+      .expect(204);
     const blogsAtEnd = await helper.blogsInDb();
 
     const titles = blogsAtEnd.map((b) => b.title);

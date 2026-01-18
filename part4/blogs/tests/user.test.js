@@ -19,8 +19,8 @@ describe("POST /api/users", () => {
     await api
       .post(USERS_URL)
       .send({
-        username: "abc",
-        password: "12",
+        username: "ab",
+        password: "123",
         name: "name",
       })
       .expect(400);
@@ -34,8 +34,8 @@ describe("POST /api/users", () => {
     await api
       .post(USERS_URL)
       .send({
-        username: "ab",
-        password: "1234",
+        username: "abc",
+        password: "12",
         name: "name",
       })
       .expect(400);
