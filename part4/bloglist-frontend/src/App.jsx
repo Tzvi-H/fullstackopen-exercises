@@ -11,6 +11,7 @@ const App = () => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -32,12 +33,22 @@ const App = () => {
       setUser(user);
       setUsername("");
       setPassword("");
+      setNotification("Sucessfully logged in");
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
     } catch {
-      console.error("an error occured during login");
+      setNotification("an error occured during login");
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
     }
   };
 
-  const handleLogout = () => setUser(null);
+  const handleLogout = () => {
+    setUser(null);
+    window.localStorage.removeItem("loggedBlogappUser");
+  };
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
@@ -77,6 +88,12 @@ const App = () => {
     setAuthor("");
     setTitle("");
     setUrl("");
+    setNotification(
+      `a new blog ${savedBlog.title} by ${savedBlog.author} added`,
+    );
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000);
   };
 
   const blogForm = () => (
@@ -117,6 +134,7 @@ const App = () => {
   if (user === null) {
     return (
       <div>
+        {notification && <p className="notification">{notification}</p>}
         <h2>Log in to application</h2>
         {loginForm()}
       </div>
@@ -125,6 +143,7 @@ const App = () => {
 
   return (
     <div>
+      {notification && <p className="notification">{notification}</p>}
       <h2>blogs</h2>
       <p>
         {user.name} logged in
