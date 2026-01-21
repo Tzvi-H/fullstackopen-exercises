@@ -89,7 +89,8 @@ const App = () => {
   };
 
   const likeBlog = async (blog) => {
-    const updatedBlog = await blogService.update(blog);
+    const result = await blogService.update(blog);
+    const updatedBlog = { ...blog, likes: result.likes };
     setBlogs(
       blogs.map((blog) => (blog.id !== updatedBlog.id ? blog : updatedBlog)),
     );
