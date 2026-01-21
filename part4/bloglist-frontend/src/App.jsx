@@ -102,6 +102,8 @@ const App = () => {
     </Togglable>
   );
 
+  const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes);
+  console.log(sortedBlogs);
   if (user === null) {
     return (
       <div>
@@ -121,7 +123,7 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </p>
       {blogForm()}
-      {blogs.map((blog) => (
+      {sortedBlogs.map((blog) => (
         <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
       ))}
     </div>
