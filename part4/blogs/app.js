@@ -8,7 +8,16 @@ const loginRouter = require("./controllers/login");
 
 const app = express();
 
-mongoose.connect(config.MONGODB_URI, { family: 4 });
+mongoose.set("strictQuery", false);
+
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log("connected to MongoDB");
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err.message);
+  });
 
 app.use(express.json());
 app.use("/api/login", loginRouter);
