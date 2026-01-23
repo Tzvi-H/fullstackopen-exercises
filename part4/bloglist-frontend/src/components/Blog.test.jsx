@@ -1,56 +1,49 @@
-import { render, screen } from '@testing-library/react'
-import Blog from './Blog'
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import Blog from "./Blog";
 
-test('renders title', () => {
-  const blog = {
-    title: "dummy title",
-    author: "dummy author",
-    url: "dummy url",
-    likes: 0,
-    user: {
-        name: "dummy name"
-    }
-  }
+describe("<Blog />", () => {
+  beforeEach(() => {
+    const blog = {
+      title: "dummy title",
+      author: "dummy author",
+      url: "dummy url",
+      likes: 0,
+      user: {
+        name: "dummy name",
+      },
+    };
 
-  render(<Blog blog={blog} />)
+    render(<Blog blog={blog} />);
+  });
 
-  const element = screen.getByText("dummy title", {exact: false})
-  expect(element).toBeDefined()
-})
+  test("renders title", () => {
+    const element = screen.getByText("dummy title", { exact: false });
+    expect(element).toBeDefined();
+  });
 
-test('renders author', () => {
-  const blog = {
-    title: "dummy title",
-    author: "dummy author",
-    url: "dummy url",
-    likes: 0,
-    user: {
-        name: "dummy name"
-    }
-  }
+  test("renders author", () => {
+    const element = screen.getByText("dummy author", { exact: false });
+    expect(element).toBeDefined();
+  });
 
-  render(<Blog blog={blog} />)
+  test("url and likes are not visible initially", () => {
+    const urlElement = screen.getByTestId("url", { exact: false });
+    expect(urlElement).not.toBeVisible();
 
-  const element = screen.getByText("dummy author", {exact: false})
-  expect(element).toBeDefined()
-})
+    const likesElement = screen.getByTestId("likes", { exact: false });
+    expect(likesElement).not.toBeVisible();
+  });
 
-test('url and likes are not visible', () => {
-  const blog = {
-    title: "dummy title",
-    author: "dummy author",
-    url: "dummy url",
-    likes: 0,
-    user: {
-        name: "dummy name"
-    }
-  }
+  test("url and likes after clicking the show button", async () => {
+    const user = userEvent.setup();
+    const button = screen.getByText("show");
+    await user.click(button);
 
-  render(<Blog blog={blog} />)
+    const urlElement = screen.getByTestId("url", { exact: false });
+    expect(urlElement).toBeVisible();
 
-  const urlElement = screen.getByTestId("url", {exact: false})
-  expect(urlElement).not.toBeVisible()
-
-  const likesElement = screen.getByTestId("likes", {exact: false})
-  expect(likesElement).not.toBeVisible()
-})
+    const likesElement = screen.getByTestId("likes", { exact: false });
+    expect(likesElement).toBeVisible();
+  });
+});
