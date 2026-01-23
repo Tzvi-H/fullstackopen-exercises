@@ -47,3 +47,25 @@ describe("<Blog />", () => {
     expect(likesElement).toBeVisible();
   });
 });
+
+test("clicking the like button twice invokes the handler twice", async () => {
+  const mockHandler = vi.fn();
+  const blog = {
+    title: "dummy title",
+    author: "dummy author",
+    url: "dummy url",
+    likes: 0,
+    user: {
+      name: "dummy name",
+    },
+  };
+
+  render(<Blog blog={blog} likeBlog={mockHandler} />);
+  const user = userEvent.setup();
+  const button = screen.getByText("show");
+  await user.click(button);
+  const likeButton = screen.getByTestId("like-button");
+  await user.click(likeButton);
+  await user.click(likeButton);
+  expect(mockHandler.mock.calls).toHaveLength(2);
+});

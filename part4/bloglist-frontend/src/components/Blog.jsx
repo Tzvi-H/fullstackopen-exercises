@@ -2,7 +2,6 @@ import { useState } from "react";
 
 const Blog = ({ blog, likeBlog, createdByCurrentUser, removeBlog }) => {
   const [visible, setVisible] = useState(false);
-
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -23,7 +22,9 @@ const Blog = ({ blog, likeBlog, createdByCurrentUser, removeBlog }) => {
         <span data-testid="url">{blog.url}</span>
         <br />
         <span data-testid="likes">likes {blog.likes}</span>
-        <button onClick={() => likeBlog(blog)}>like</button>
+        <button data-testid="like-button" onClick={() => likeBlog(blog)}>
+          like
+        </button>
         <br />
         {blog.user.name}
         <br />
