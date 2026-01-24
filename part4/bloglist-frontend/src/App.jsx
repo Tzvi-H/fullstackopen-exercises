@@ -38,10 +38,10 @@ const App = () => {
         setNotification(null);
       }, 3000);
     } catch {
-      setNotification("an error occured during login");
+      setNotification("wrong credentials");
       setTimeout(() => {
         setNotification(null);
-      }, 3000);
+      }, 6000);
     }
   };
 

@@ -1,4 +1,6 @@
 .notification {
-  border: 3px solid black;
+  border: 3px solid;
+  background: lightgrey;
   padding: 4px;
+  color: red;
 }
