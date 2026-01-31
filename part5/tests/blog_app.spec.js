@@ -51,7 +51,7 @@ describe("Blog app", () => {
       await page.getByRole("button", { name: "login" }).click();
     });
 
-    test.only("a new blog can be created", async ({ page }) => {
+    test("a new blog can be created", async ({ page }) => {
       await page.getByRole("button", { name: "create new blog" }).click();
       await page.getByLabel("title").fill("title from test");
       await page.getByLabel("author").fill("author from test");
@@ -61,6 +61,23 @@ describe("Blog app", () => {
       await expect(
         page.getByText("title from test author from test"),
       ).toBeVisible();
+    });
+
+    describe("And a blog exists", () => {
+      beforeEach(async ({ page }) => {
+        await page.getByRole("button", { name: "create new blog" }).click();
+        await page.getByLabel("title").fill("title from test");
+        await page.getByLabel("author").fill("author from test");
+        await page.getByLabel("url").fill("url from test");
+        await page.getByRole("button", { name: "create" }).click();
+      });
+
+      test.only("a blog can be liked", async ({ page }) => {
+        await page.pause();
+        await page.getByRole("button", { name: "show" }).click();
+        await page.getByRole("button", { name: "like" }).click();
+        await expect(page.getByText("likes 1")).toBeVisible();
+      });
     });
   });
 });
