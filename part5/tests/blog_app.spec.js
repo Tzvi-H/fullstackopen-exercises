@@ -42,4 +42,25 @@ describe("Blog app", () => {
       await expect(page.getByText("tzvi logged in")).not.toBeVisible();
     });
   });
+
+  describe("When logged in", () => {
+    beforeEach(async ({ page }) => {
+      await page.getByRole("button", { name: "login" }).click();
+      await page.getByLabel("username").fill("16guitar");
+      await page.getByLabel("password").fill("123456");
+      await page.getByRole("button", { name: "login" }).click();
+    });
+
+    test.only("a new blog can be created", async ({ page }) => {
+      await page.getByRole("button", { name: "create new blog" }).click();
+      await page.getByLabel("title").fill("title from test");
+      await page.getByLabel("author").fill("author from test");
+      await page.getByLabel("url").fill("url from test");
+      await page.getByRole("button", { name: "create" }).click();
+      await page.getByText("title from test author from test").waitFor();
+      await expect(
+        page.getByText("title from test author from test"),
+      ).toBeVisible();
+    });
+  });
 });
