@@ -20,7 +20,6 @@ describe("Blog app", () => {
 
   describe("Login", () => {
     test("succeeds with correct credentials", async ({ page }) => {
-      // await page.getByRole("button", { name: "login" }).click();
       await page.getByLabel("username").fill("16guitar");
       await page.getByLabel("password").fill("123456");
       await page.getByRole("button", { name: "login" }).click();
@@ -29,7 +28,6 @@ describe("Blog app", () => {
     });
 
     test("fails with wrong credentials", async ({ page }) => {
-      // await page.getByRole("button", { name: "login" }).click();
       await page.getByLabel("username").fill("16guitar");
       await page.getByLabel("password").fill("wrong password");
       await page.getByRole("button", { name: "login" }).click();
@@ -45,7 +43,6 @@ describe("Blog app", () => {
 
   describe("When logged in", () => {
     beforeEach(async ({ page }) => {
-      // await page.getByRole("button", { name: "login" }).click();
       await page.getByLabel("username").fill("16guitar");
       await page.getByLabel("password").fill("123456");
       await page.getByRole("button", { name: "login" }).click();
@@ -116,6 +113,44 @@ describe("Blog app", () => {
           page.getByRole("button", { name: "remove" }),
         ).not.toBeVisible();
       });
+    });
+
+    test.only("blogs are ordered by likes in descending order when multiple blogs exist", async ({
+      page,
+    }) => {
+      await page.getByRole("button", { name: "create new blog" }).click();
+      await page.getByLabel("title").fill("title 1");
+      await page.getByLabel("author").fill("author 1");
+      await page.getByLabel("url").fill("url 1");
+      await page.getByRole("button", { name: "create" }).click();
+
+      await page.getByText("title 1 author 1").waitFor();
+
+      await page.getByRole("button", { name: "create new blog" }).click();
+      await page.getByLabel("title").fill("title 2");
+      await page.getByLabel("author").fill("author 2");
+      await page.getByLabel("url").fill("url 2");
+      await page.getByRole("button", { name: "create" }).click();
+
+      await page.getByText("title 2 author 2").waitFor();
+
+      const blogs = await page.locator(".blogs > *");
+      const blogTexts = await blogs.allTextContents();
+
+      expect(blogTexts[0]).toContain("title 1 author 1");
+      expect(blogTexts[1]).toContain("title 2 author 2");
+
+      const blog2 = await page.getByText("title 2 author 2");
+      await blog2.getByRole("button", { name: "show" }).click();
+      await blog2.getByRole("button", { name: "like" }).click();
+
+      await blog2.getByText("likes 1").waitFor();
+
+      const updatedBlogs = await page.locator(".blogs > *");
+      const updatedTexts = await updatedBlogs.allTextContents();
+
+      expect(updatedTexts[0]).toContain("title 2");
+      expect(updatedTexts[1]).toContain("title 1");
     });
   });
 });
