@@ -1,7 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-import { Link, Routes, Route, useMatch } from "react-router-dom";
+import { Link, Routes, Route, useMatch, useNavigate } from "react-router-dom";
+
+const Notification = ({ notification }) => {
+  return notification && <div>{notification}</div>;
+};
 
 const Menu = () => {
   const padding = {
@@ -35,15 +39,18 @@ const AnecdoteList = ({ anecdotes }) => (
   </div>
 );
 
-const Anecdote = ({ anecdote }) => (
-  <div>
-    <h2>{anecdote.content}</h2>
-    <p>has {anecdote.votes} votes</p>
-    <p>
-      for more info see <a href={anecdote.info}>{anecdote.info}</a>
-    </p>
-  </div>
-);
+const Anecdote = ({ anecdote }) => {
+  if (!anecdote) return null;
+  return (
+    <div>
+      <h2>{anecdote.content}</h2>
+      <p>has {anecdote.votes} votes</p>
+      <p>
+        for more info see <a href={anecdote.info}>{anecdote.info}</a>
+      </p>
+    </div>
+  );
+};
 
 const About = () => (
   <div>
@@ -79,6 +86,7 @@ const Footer = () => (
 );
 
 const CreateNew = (props) => {
+  const navigate = useNavigate();
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
   const [info, setInfo] = useState("");
@@ -91,6 +99,9 @@ const CreateNew = (props) => {
       info,
       votes: 0,
     });
+    navigate("/anecdotes");
+    props.setNotification(`a new anecdote ${content} created!`);
+    setTimeout(() => props.setNotification(""), 2500);
   };
 
   return (
@@ -145,7 +156,7 @@ const App = () => {
     },
   ]);
 
-  // const [notification, setNotification] = useState("");
+  const [notification, setNotification] = useState("");
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000);
@@ -174,6 +185,7 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      <Notification notification={notification} />
       <Routes>
         <Route
           path="/anecdotes/:id"
@@ -183,7 +195,12 @@ const App = () => {
           path="/anecdotes"
           element={<AnecdoteList anecdotes={anecdotes} />}
         />
-        <Route path="create" element={<CreateNew addNew={addNew} />} />
+        <Route
+          path="create"
+          element={
+            <CreateNew addNew={addNew} setNotification={setNotification} />
+          }
+        />
         <Route path="about" element={<About />} />
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
       </Routes>
