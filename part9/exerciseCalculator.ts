@@ -1,4 +1,4 @@
-interface excerciseSummary {
+interface ExcerciseSummary {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -11,7 +11,7 @@ interface excerciseSummary {
 const calculateExercises = (
   dailyExerciseHours: number[],
   target: number,
-): excerciseSummary => {
+): ExcerciseSummary => {
   const periodLength = dailyExerciseHours.length;
   const trainingDays = dailyExerciseHours.filter((hours) => hours > 0).length;
   const totalHours = dailyExerciseHours.reduce((a, b) => a + b, 0);
