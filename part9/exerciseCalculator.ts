@@ -65,13 +65,15 @@ const parseArguments = (args: string[]): CalculateValues => {
   };
 };
 
-try {
-  const { target, hours } = parseArguments(process.argv);
-  console.log(calculateExercises(hours, target));
-} catch (error) {
-  let errorMessage = "Something bad happened.";
-  if (error instanceof Error) {
-    errorMessage += " Error: " + error.message;
+if (require.main === module) {
+  try {
+    const { target, hours } = parseArguments(process.argv);
+    console.log(calculateExercises(hours, target));
+  } catch (error) {
+    let errorMessage = "Something bad happened.";
+    if (error instanceof Error) {
+      errorMessage += " Error: " + error.message;
+    }
+    console.log(errorMessage);
   }
-  console.log(errorMessage);
 }
